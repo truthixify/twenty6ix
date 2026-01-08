@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { Navigation } from '@/components/features/Navigation'
 import { XPDisplay } from '@/components/features/XPDisplay'
+import { ContractStatus } from '@/components/features/ContractStatus'
 import { useApp } from '@/contexts/AppContext'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
@@ -149,6 +150,8 @@ export default function HomePage() {
                                 </Button>
                             </CardContent>
                         </Card>
+
+                        <ContractStatus />
                     </TabsContent>
 
                     <TabsContent value='tasks' className='space-y-4'>
