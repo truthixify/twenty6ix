@@ -6,6 +6,7 @@ import { XPDisplay } from '@/components/features/XPDisplay'
 import { DailyClaimCard } from '@/components/features/DailyClaimCard'
 import { DonationCard } from '@/components/features/DonationCard'
 import { ReferralCard } from '@/components/features/ReferralCard'
+import { ContractStatus } from '@/components/features/ContractStatus'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { NFT_TIERS } from '@/lib/web3'
 import { AppLayout } from '@/components/layout/AppLayout'
@@ -93,6 +94,9 @@ export function DashboardContent() {
                                     </div>
                                 </CardContent>
                             </Card>
+
+                            {/* Contract Status */}
+                            <ContractStatus />
                         </div>
                     </div>
                 </div>

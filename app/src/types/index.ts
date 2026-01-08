@@ -143,3 +143,83 @@ export interface NFTCardProps {
     isOwned: boolean
     onMint: () => void
 }
+
+// Contract Types
+export interface ContractAddresses {
+    factory: `0x${string}`
+    earlyBirdNFT?: `0x${string}`
+    silverNFT?: `0x${string}`
+    goldNFT?: `0x${string}`
+    platinumNFT?: `0x${string}`
+    payments?: `0x${string}`
+}
+
+export interface ContractConfig {
+    addresses: ContractAddresses
+    chainId: number
+    treasury: `0x${string}`
+    owner: `0x${string}`
+}
+
+// Smart Contract Function Types
+export interface NFTTierConfig {
+    mintPrice: bigint
+    maxSupply: bigint
+    currentSupply: bigint
+    baseURI: string
+    isActive: boolean
+    requiredTier: number
+    requiresPrevious: boolean
+}
+
+export interface UserStats {
+    claims: bigint
+    donations: bigint
+    spent: bigint
+    lastClaim: bigint
+}
+
+export interface ContractTransaction {
+    hash: `0x${string}`
+    status: 'pending' | 'success' | 'error'
+    type: 'mint' | 'claim' | 'donate'
+    amount?: bigint
+    tier?: NFTType
+}
+
+// Contract Event Types
+export interface ContractEvent {
+    eventName: string
+    args: Record<string, any>
+    blockNumber: bigint
+    transactionHash: `0x${string}`
+    timestamp: number
+}
+
+export interface DailyClaimEvent extends ContractEvent {
+    eventName: 'DailyClaim'
+    args: {
+        user: `0x${string}`
+        amount: bigint
+        timestamp: bigint
+    }
+}
+
+export interface DonationEvent extends ContractEvent {
+    eventName: 'Donation'
+    args: {
+        user: `0x${string}`
+        amount: bigint
+        timestamp: bigint
+    }
+}
+
+export interface TierMintedEvent extends ContractEvent {
+    eventName: 'TierMinted'
+    args: {
+        user: `0x${string}`
+        tier: number
+        tokenId: bigint
+        price: bigint
+    }
+}
