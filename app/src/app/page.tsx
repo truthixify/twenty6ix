@@ -6,31 +6,9 @@ import { WelcomeScreen } from '@/components/features/WelcomeScreen'
 import { useApp } from '@/contexts/AppContext'
 
 export default function HomePage() {
-    const { state, miniApp, dispatch } = useApp()
+    const { state, miniApp, signInWithFarcaster } = useApp()
     const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
-
-    // Demo mode - set to true to test the authenticated dashboard
-    const DEMO_MODE = true
-
-    // Demo mode setup
-    useEffect(() => {
-        if (DEMO_MODE && !state.user) {
-            const demoUser = {
-                fid: 123456,
-                wallet_address: '0x1234567890123456789012345678901234567890',
-                xp_total: 1250,
-                total_spend_usd: 15.50,
-                referral_code: 'DEMO123',
-                referred_by_fid: undefined,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString()
-            }
-            
-            // Set demo user
-            dispatch({ type: 'SET_USER', payload: demoUser })
-        }
-    }, [DEMO_MODE, state.user, dispatch])
 
     // Redirect to dashboard if authenticated
     useEffect(() => {
@@ -57,10 +35,13 @@ export default function HomePage() {
     const handleSignIn = async () => {
         setIsLoading(true)
         
-        // Simulate sign-in process
-        await new Promise(resolve => setTimeout(resolve, 1500))
-        
-        setIsLoading(false)
+        try {
+            await signInWithFarcaster()
+        } catch (error) {
+            console.error('Sign in failed:', error)
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     if (!state.isAuthenticated) {
@@ -69,6 +50,7 @@ export default function HomePage() {
                 onSignIn={handleSignIn}
                 isMiniApp={miniApp.isMiniApp}
                 isLoading={isLoading}
+                error={state.error}
             />
         )
     }

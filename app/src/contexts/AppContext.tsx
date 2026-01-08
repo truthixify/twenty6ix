@@ -97,10 +97,18 @@ export function AppProvider({ children }: AppProviderProps) {
         try {
             dispatch({ type: 'SET_LOADING', payload: true })
 
+            // Check if demo mode is enabled
+            const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+
             let fid: number
             let walletAddress: string | undefined
 
-            if (miniApp.isMiniApp && miniApp.user) {
+            if (isDemoMode) {
+                // Demo mode - create demo user
+                fid = 123456
+                walletAddress = '0x1234567890123456789012345678901234567890'
+                console.log('Demo mode: Using demo user')
+            } else if (miniApp.isMiniApp && miniApp.user) {
                 // Use Farcaster Mini App authentication
                 fid = miniApp.user.fid
                 // For Mini Apps, wallet address would come from separate wallet connection
@@ -161,8 +169,8 @@ export function AppProvider({ children }: AppProviderProps) {
                 const newUser: Omit<Profile, 'created_at' | 'updated_at'> = {
                     fid,
                     wallet_address: walletAddress,
-                    xp_total: 0,
-                    total_spend_usd: 0,
+                    xp_total: isDemoMode ? 1250 : 0, // Demo user starts with XP
+                    total_spend_usd: isDemoMode ? 15.50 : 0, // Demo user has some spend
                     referral_code: generateReferralCode(fid),
                 }
 

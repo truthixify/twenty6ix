@@ -15,12 +15,12 @@ interface AppLayoutProps {
 }
 
 export function AppLayout({ children, currentPage }: AppLayoutProps) {
-    const { state, miniApp, dispatch } = useApp()
+    const { state, miniApp, signOut } = useApp()
     const router = useRouter()
 
-    // Demo mode - set to true to test the authenticated dashboard
-    const DEMO_MODE = true
-
+    // Check if demo mode is enabled
+    const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+    
     // Check if user is admin
     const isAdmin = state.user?.fid.toString() === process.env.NEXT_PUBLIC_OWNER_FID
 
@@ -41,8 +41,8 @@ export function AppLayout({ children, currentPage }: AppLayoutProps) {
         router.push(path)
     }
 
-    const handleSignOut = () => {
-        dispatch({ type: 'RESET_STATE' })
+    const handleSignOut = async () => {
+        await signOut()
         router.push('/')
     }
 
@@ -62,7 +62,7 @@ export function AppLayout({ children, currentPage }: AppLayoutProps) {
                                     Mini App
                                 </span>
                             )}
-                            {DEMO_MODE && (
+                            {isDemoMode && (
                                 <span className='rounded-full bg-orange-100 px-2 py-1 text-xs text-orange-800'>
                                     Demo
                                 </span>
@@ -95,15 +95,13 @@ export function AppLayout({ children, currentPage }: AppLayoutProps) {
                                     <div className='text-muted-foreground text-sm'>
                                         FID: {state.user?.fid}
                                     </div>
-                                    {DEMO_MODE && (
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={handleSignOut}
-                                        >
-                                            Sign Out
-                                        </Button>
-                                    )}
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={handleSignOut}
+                                    >
+                                        Sign Out
+                                    </Button>
                                 </div>
                             </div>
                         </div>
@@ -113,15 +111,13 @@ export function AppLayout({ children, currentPage }: AppLayoutProps) {
                             <div className='text-muted-foreground text-sm'>
                                 FID: {state.user?.fid}
                             </div>
-                            {DEMO_MODE && (
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={handleSignOut}
-                                >
-                                    Sign Out
-                                </Button>
-                            )}
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={handleSignOut}
+                            >
+                                Sign Out
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -135,7 +131,7 @@ export function AppLayout({ children, currentPage }: AppLayoutProps) {
                     <div className="h-[80px] bg-muted/30 flex items-center px-6">
                         <div className="flex items-center gap-2">
                             <h1 className="text-lg font-bold">TWENTY6IX</h1>
-                            {DEMO_MODE && (
+                            {isDemoMode && (
                                 <span className="rounded-full bg-orange-100 px-2 py-1 text-xs text-orange-800">
                                     Demo
                                 </span>

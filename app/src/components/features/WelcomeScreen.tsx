@@ -10,9 +10,10 @@ interface WelcomeScreenProps {
     onSignIn: () => void
     isMiniApp: boolean
     isLoading?: boolean
+    error?: string | null
 }
 
-export function WelcomeScreen({ onSignIn, isMiniApp, isLoading = false }: WelcomeScreenProps) {
+export function WelcomeScreen({ onSignIn, isMiniApp, isLoading = false, error }: WelcomeScreenProps) {
     return (
         <div className='flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-blue-50 to-purple-50'>
             <Card className='w-full max-w-md'>
@@ -82,6 +83,33 @@ export function WelcomeScreen({ onSignIn, isMiniApp, isLoading = false }: Welcom
                         </div>
                     </div>
 
+                    {/* Environment Info */}
+                    {!isMiniApp && (
+                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
+                            <p className="text-yellow-800 text-sm font-medium">Web Environment Detected</p>
+                            <p className="text-yellow-700 text-xs mt-1">
+                                For the best experience, open this app in Warpcast as a Mini App.
+                            </p>
+                        </div>
+                    )}
+
+                    {isMiniApp && (
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                            <p className="text-blue-800 text-sm font-medium">Farcaster Mini App Detected</p>
+                            <p className="text-blue-700 text-xs mt-1">
+                                Ready for native Farcaster authentication.
+                            </p>
+                        </div>
+                    )}
+
+                    {/* Error Display */}
+                    {error && (
+                        <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+                            <p className="text-red-600 text-sm font-medium">Authentication Error</p>
+                            <p className="text-red-600 text-xs mt-1">{error}</p>
+                        </div>
+                    )}
+
                     {/* Sign In Button */}
                     <Button
                         className='w-full'
@@ -91,12 +119,12 @@ export function WelcomeScreen({ onSignIn, isMiniApp, isLoading = false }: Welcom
                         {isLoading ? (
                             <>
                                 <div className="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
-                                Connecting...
+                                {isMiniApp ? 'Connecting to Farcaster...' : 'Signing in...'}
                             </>
                         ) : (
                             <>
                                 <Zap className="mr-2 h-4 w-4" />
-                                Enter Dashboard (Demo)
+                                {isMiniApp ? 'Sign in with Farcaster' : 'Enter Dashboard'}
                             </>
                         )}
                     </Button>
@@ -106,13 +134,26 @@ export function WelcomeScreen({ onSignIn, isMiniApp, isLoading = false }: Welcom
                         <p className="text-xs text-muted-foreground">
                             Built on Base • Powered by Farcaster
                         </p>
-                        <p className="text-xs text-orange-600 mt-1">
-                            Demo Mode: Click to explore the full dashboard
-                        </p>
-                        {isMiniApp && (
+                        {isMiniApp ? (
                             <p className="text-xs text-blue-600 mt-1">
-                                Optimized for mobile experience
+                                Optimized for Farcaster Mini App experience
                             </p>
+                        ) : (
+                            <p className="text-xs text-muted-foreground mt-1">
+                                Best experienced in Warpcast as a Mini App
+                            </p>
+                        )}
+                        
+                        {/* Debug Link */}
+                        {process.env.NODE_ENV === 'development' && (
+                            <div className="mt-2">
+                                <a 
+                                    href="/debug" 
+                                    className="text-xs text-gray-500 hover:text-gray-700 underline"
+                                >
+                                    Debug Authentication
+                                </a>
+                            </div>
                         )}
                     </div>
                 </CardContent>

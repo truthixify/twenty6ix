@@ -45,13 +45,41 @@ export function useFarcasterMiniApp() {
         // Check if we're in a Farcaster Mini App environment
         const checkEnvironment = () => {
             const userAgent = navigator.userAgent
+            const url = window.location.href
+            const referrer = document.referrer
+            
+            // More comprehensive Farcaster detection
             const isFarcasterClient =
+                // Direct Farcaster user agent detection
                 userAgent.includes('Farcaster') ||
                 userAgent.includes('Warpcast') ||
+                // Frame context detection
                 window.location !== window.parent.location || // iframe detection
-                window.location.search.includes('fc_frame=') ||
-                document.referrer.includes('farcaster') ||
-                document.referrer.includes('warpcast')
+                url.includes('fc_frame=') ||
+                url.includes('farcaster') ||
+                // Referrer detection
+                referrer.includes('farcaster') ||
+                referrer.includes('warpcast') ||
+                referrer.includes('fc.xyz') ||
+                // URL parameters that indicate Farcaster context
+                new URLSearchParams(window.location.search).has('fc_frame') ||
+                // Check for Farcaster-specific window properties
+                'farcaster' in window ||
+                // Check if we're in an embedded context with Farcaster origins
+                (window.parent !== window && (
+                    referrer.includes('warpcast') || 
+                    referrer.includes('farcaster')
+                ))
+
+            console.log('Environment detection:', {
+                userAgent,
+                url,
+                referrer,
+                isIframe: window.location !== window.parent.location,
+                isFarcasterClient,
+                hasFrameParam: url.includes('fc_frame='),
+                windowFarcaster: 'farcaster' in window
+            })
 
             setIsMiniApp(isFarcasterClient)
             return isFarcasterClient
@@ -64,74 +92,108 @@ export function useFarcasterMiniApp() {
                 try {
                     // Load SDK from CDN if not already loaded
                     if (!window.sdk) {
+                        console.log('Loading Farcaster SDK...')
+                        
+                        // Try to load the SDK
                         const script = document.createElement('script')
                         script.type = 'module'
                         script.innerHTML = `
-              import { sdk } from 'https://esm.sh/@farcaster/miniapp-sdk';
-              window.sdk = sdk;
-              window.dispatchEvent(new CustomEvent('farcaster-sdk-loaded'));
-            `
+                            try {
+                                const { sdk } = await import('https://esm.sh/@farcaster/miniapp-sdk');
+                                window.sdk = sdk;
+                                window.dispatchEvent(new CustomEvent('farcaster-sdk-loaded', { detail: { success: true } }));
+                            } catch (error) {
+                                console.error('Failed to load Farcaster SDK:', error);
+                                window.dispatchEvent(new CustomEvent('farcaster-sdk-loaded', { detail: { success: false, error } }));
+                            }
+                        `
                         document.head.appendChild(script)
 
                         // Wait for SDK to load
-                        await new Promise(resolve => {
-                            const handleLoad = () => {
-                                window.removeEventListener(
-                                    'farcaster-sdk-loaded',
-                                    handleLoad
-                                )
-                                resolve(void 0)
+                        const loadResult = await new Promise<{ success: boolean; error?: any }>(resolve => {
+                            const handleLoad = (event: CustomEvent) => {
+                                window.removeEventListener('farcaster-sdk-loaded', handleLoad as EventListener)
+                                resolve(event.detail)
                             }
-                            window.addEventListener(
-                                'farcaster-sdk-loaded',
-                                handleLoad
-                            )
+                            window.addEventListener('farcaster-sdk-loaded', handleLoad as EventListener)
+                            
+                            // Timeout after 10 seconds
+                            setTimeout(() => {
+                                window.removeEventListener('farcaster-sdk-loaded', handleLoad as EventListener)
+                                resolve({ success: false, error: 'SDK load timeout' })
+                            }, 10000)
                         })
+
+                        if (!loadResult.success) {
+                            throw new Error(`SDK loading failed: ${loadResult.error}`)
+                        }
                     }
 
                     if (window.sdk) {
+                        console.log('Farcaster SDK loaded successfully')
                         setSdk(window.sdk)
                         setUser(window.sdk.context.user || null)
 
                         // Signal that the app is ready
                         await window.sdk.actions.ready()
                         setIsReady(true)
+                        console.log('Farcaster Mini App ready')
                     }
                 } catch (error) {
                     console.error('Failed to initialize Farcaster SDK:', error)
-                    // Fallback: create a mock SDK for development
-                    const mockSdk: FarcasterSDK = {
-                        actions: {
-                            ready: async () => {
-                                setIsReady(true)
+                    
+                    // Check if we're in development mode
+                    const isDev = process.env.NODE_ENV === 'development'
+                    
+                    if (isDev) {
+                        console.log('Development mode: Creating mock SDK for testing')
+                        // Fallback: create a mock SDK for development
+                        const mockSdk: FarcasterSDK = {
+                            actions: {
+                                ready: async () => {
+                                    console.log('Mock SDK ready')
+                                    setIsReady(true)
+                                },
+                                openUrl: async (url: string) => {
+                                    console.log('Mock openUrl:', url)
+                                    window.open(url, '_blank')
+                                },
+                                close: async () => {
+                                    console.log('Mock close')
+                                    window.close()
+                                },
                             },
-                            openUrl: async (url: string) => {
-                                window.open(url, '_blank')
+                            context: {
+                                user: {
+                                    fid: 123456,
+                                    username: 'testuser',
+                                    displayName: 'Test User',
+                                    pfpUrl: undefined,
+                                },
                             },
-                            close: async () => {
-                                window.close()
+                            quickAuth: {
+                                getToken: async () => {
+                                    console.log('Mock getToken')
+                                    return 'mock-token-' + Date.now()
+                                },
+                                fetch: async (url: string, options?: RequestInit) => {
+                                    console.log('Mock fetch:', url)
+                                    return fetch(url, options)
+                                },
                             },
-                        },
-                        context: {
-                            user: {
-                                fid: 123456,
-                                username: 'demo',
-                                displayName: 'Demo User',
-                                pfpUrl: undefined,
-                            },
-                        },
-                        quickAuth: {
-                            getToken: async () => 'mock-token',
-                            fetch: async (url: string, options?: RequestInit) =>
-                                fetch(url, options),
-                        },
+                        }
+                        setSdk(mockSdk)
+                        setUser(mockSdk.context.user || null)
+                        setIsReady(true)
+                    } else {
+                        // In production, fail gracefully
+                        console.error('Farcaster SDK failed to load in production')
+                        setIsReady(true) // Still set ready to avoid infinite loading
                     }
-                    setSdk(mockSdk)
-                    setUser(mockSdk.context.user || null)
-                    setIsReady(true)
                 }
             } else {
                 // Not in Mini App environment
+                console.log('Not in Farcaster Mini App environment')
                 setIsReady(true)
             }
         }
