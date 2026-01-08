@@ -1,27 +1,42 @@
 'use client'
 
 import React from 'react'
+import { useRouter } from 'next/navigation'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import { Home, CheckSquare, Coins, Trophy, Info, Settings } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface NavigationProps {
     activeTab: string
-    onTabChange: (tab: string) => void
     isAdmin?: boolean
 }
 
-export function Navigation({ activeTab, onTabChange, isAdmin = false }: NavigationProps) {
+export function Navigation({ activeTab, isAdmin = false }: NavigationProps) {
+    const router = useRouter()
+
     const tabs = [
-        { id: 'home', label: 'Home', icon: Home },
-        { id: 'tasks', label: 'Tasks', icon: CheckSquare },
-        { id: 'mint', label: 'Mint', icon: Coins },
-        { id: 'leaderboard', label: 'Leaderboard', icon: Trophy },
-        { id: 'info', label: isAdmin ? 'Admin' : 'Info', icon: isAdmin ? Settings : Info },
+        { id: 'dashboard', label: 'Home', icon: Home, path: '/dashboard' },
+        { id: 'social-tasks', label: 'Tasks', icon: CheckSquare, path: '/social-tasks' },
+        { id: 'nft-collection', label: 'Mint', icon: Coins, path: '/nft-collection' },
+        { id: 'leaderboard', label: 'Leaderboard', icon: Trophy, path: '/leaderboard' },
+        { 
+            id: isAdmin ? 'admin' : 'information', 
+            label: isAdmin ? 'Admin' : 'Info', 
+            icon: isAdmin ? Settings : Info,
+            path: isAdmin ? '/admin' : '/information'
+        },
     ]
+
+    const handleTabChange = (tabId: string) => {
+        const tab = tabs.find(t => t.id === tabId)
+        if (tab) {
+            router.push(tab.path)
+        }
+    }
+
     return (
         <div className='bg-background border-border fixed right-0 bottom-0 left-0 z-50 border-t'>
-            <Tabs value={activeTab} onValueChange={onTabChange}>
+            <Tabs value={activeTab} onValueChange={handleTabChange}>
                 <TabsList className='grid h-16 w-full grid-cols-5 bg-transparent'>
                     {tabs.map(tab => {
                         const Icon = tab.icon
