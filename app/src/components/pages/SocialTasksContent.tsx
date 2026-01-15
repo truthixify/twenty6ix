@@ -55,9 +55,8 @@ export function SocialTasksContent() {
         try {
             setIsLoading(true)
             // TODO: Implement task completion logic
-            console.log(`Completing task ${taskId}...`)
         } catch (error) {
-            console.error('Error completing task:', error)
+            // Task completion failed
         } finally {
             setIsLoading(false)
         }

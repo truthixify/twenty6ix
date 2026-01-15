@@ -41,7 +41,7 @@ export function ContractStatus() {
   const handleDeployEcosystem = async () => {
     const transaction = await deployEcosystem()
     if (transaction) {
-      console.log('Deployment transaction:', transaction)
+      // Deployment transaction submitted
     }
   }
 

@@ -58,7 +58,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
                   }
                 : state
         case 'RESET_STATE':
-            return initialState
+            return { ...initialState, isLoading: false }
         default:
             return state
     }
@@ -107,7 +107,6 @@ export function AppProvider({ children }: AppProviderProps) {
                 // Demo mode - create demo user
                 fid = 123456
                 walletAddress = '0x1234567890123456789012345678901234567890'
-                console.log('Demo mode: Using demo user')
             } else if (miniApp.isMiniApp && miniApp.user) {
                 // Use Farcaster Mini App authentication
                 fid = miniApp.user.fid
@@ -124,7 +123,6 @@ export function AppProvider({ children }: AppProviderProps) {
             } else {
                 // Web fallback - for now, use demo data
                 // TODO: Implement traditional SIWF for web
-                console.log('Web environment - implement traditional SIWF')
                 fid = 123456 // Demo FID
                 walletAddress = undefined
             }
@@ -189,17 +187,23 @@ export function AppProvider({ children }: AppProviderProps) {
             // Set up Mini App features
             if (miniApp.isMiniApp) {
                 // Mini App is ready, no additional setup needed for now
-                console.log('Farcaster Mini App initialized')
             }
         } catch (error) {
-            console.error('Sign in error:', error)
             dispatch({ type: 'SET_ERROR', payload: 'Failed to sign in' })
         }
     }
 
     // Sign out
     const signOut = async () => {
-        dispatch({ type: 'RESET_STATE' })
+        try {
+            // Clear any Supabase session if exists
+            await supabase.auth.signOut()
+        } catch (error) {
+            // Ignore sign out errors
+        } finally {
+            // Always reset state regardless of errors
+            dispatch({ type: 'RESET_STATE' })
+        }
     }
 
     // Update profile
@@ -217,7 +221,6 @@ export function AppProvider({ children }: AppProviderProps) {
             if (error) throw error
             dispatch({ type: 'SET_USER', payload: updatedUser })
         } catch (error) {
-            console.error('Update profile error:', error)
             dispatch({ type: 'SET_ERROR', payload: 'Failed to update profile' })
         }
     }
@@ -236,7 +239,7 @@ export function AppProvider({ children }: AppProviderProps) {
             if (error) throw error
             dispatch({ type: 'SET_USER', payload: user })
         } catch (error) {
-            console.error('Refresh user error:', error)
+            // Ignore refresh errors
         }
     }
 
@@ -249,13 +252,18 @@ export function AppProvider({ children }: AppProviderProps) {
             if (error) throw error
             setLeaderboard(data || [])
         } catch (error) {
-            console.error('Refresh leaderboard error:', error)
+            // Ignore leaderboard errors
         }
     }
 
     // Auto-authenticate if in Mini App and user is available
     useEffect(() => {
-        if (miniApp.isMiniApp && miniApp.user && !state.isAuthenticated) {
+        const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+        
+        if (isDemoMode) {
+            // In demo mode, skip Mini App checks and set ready immediately
+            dispatch({ type: 'SET_LOADING', payload: false })
+        } else if (miniApp.isMiniApp && miniApp.user && !state.isAuthenticated) {
             signInWithFarcaster()
         } else if (!miniApp.isMiniApp && miniApp.isReady) {
             // For web, set loading to false when ready

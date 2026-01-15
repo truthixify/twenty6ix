@@ -17,13 +17,12 @@ export function NFTCollectionContent() {
             setIsLoading(true)
             
             // TODO: Implement actual NFT minting
-            console.log(`Minting ${tierType} NFT...`)
             
             // Simulate minting delay
             await new Promise(resolve => setTimeout(resolve, 3000))
             
         } catch (error) {
-            console.error('Error minting NFT:', error)
+            // NFT minting failed
         } finally {
             setIsLoading(false)
         }
