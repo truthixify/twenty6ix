@@ -38,7 +38,7 @@ export function FarcasterDebug() {
         try {
             await signInWithFarcaster()
         } catch (error) {
-            console.error('Test auth failed:', error)
+            // Test auth failed
         }
     }
 
@@ -46,9 +46,9 @@ export function FarcasterDebug() {
         if (miniApp.sdk) {
             try {
                 const token = await miniApp.authenticate()
-                console.log('SDK Auth result:', token)
+                // SDK Auth successful
             } catch (error) {
-                console.error('SDK Auth failed:', error)
+                // SDK Auth failed
             }
         }
     }

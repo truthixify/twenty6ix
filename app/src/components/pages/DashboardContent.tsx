@@ -16,12 +16,10 @@ export function DashboardContent() {
 
     const handleDailyClaim = async () => {
         // TODO: Implement daily claim logic
-        console.log('Processing daily claim...')
     }
 
     const handleDonate = async (amount: number) => {
         // TODO: Implement donation logic
-        console.log(`Processing donation of ${amount}...`)
     }
 
     const handleShareReferral = () => {

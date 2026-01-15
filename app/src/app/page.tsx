@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { WelcomeScreen } from '@/components/features/WelcomeScreen'
 import { useApp } from '@/contexts/AppContext'
@@ -9,6 +9,7 @@ export default function HomePage() {
     const { state, miniApp, signInWithFarcaster } = useApp()
     const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
+    const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
 
     // Redirect to dashboard if authenticated
     useEffect(() => {
@@ -17,7 +18,7 @@ export default function HomePage() {
         }
     }, [state.isAuthenticated, state.user, router])
 
-    if (state.isLoading || (miniApp.isMiniApp && !miniApp.isReady)) {
+    if (state.isLoading || (miniApp.isMiniApp && !miniApp.isReady && !isDemoMode)) {
         return (
             <div className='flex min-h-screen items-center justify-center'>
                 <div className='text-center'>
@@ -36,9 +37,15 @@ export default function HomePage() {
         setIsLoading(true)
         
         try {
-            await signInWithFarcaster()
+            // In demo mode, just navigate directly to dashboard
+            if (isDemoMode) {
+                await signInWithFarcaster()
+                router.push('/dashboard')
+            } else {
+                await signInWithFarcaster()
+            }
         } catch (error) {
-            console.error('Sign in failed:', error)
+            // Sign in failed
         } finally {
             setIsLoading(false)
         }

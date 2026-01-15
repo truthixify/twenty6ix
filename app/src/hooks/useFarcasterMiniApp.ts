@@ -42,6 +42,16 @@ export function useFarcasterMiniApp() {
     )
 
     useEffect(() => {
+        // Check if we're in demo mode
+        const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+        
+        if (isDemoMode) {
+            // In demo mode, skip all Farcaster SDK initialization
+            setIsMiniApp(false)
+            setIsReady(true)
+            return
+        }
+
         // Check if we're in a Farcaster Mini App environment
         const checkEnvironment = () => {
             const userAgent = navigator.userAgent
@@ -71,16 +81,6 @@ export function useFarcasterMiniApp() {
                     referrer.includes('farcaster')
                 ))
 
-            console.log('Environment detection:', {
-                userAgent,
-                url,
-                referrer,
-                isIframe: window.location !== window.parent.location,
-                isFarcasterClient,
-                hasFrameParam: url.includes('fc_frame='),
-                windowFarcaster: 'farcaster' in window
-            })
-
             setIsMiniApp(isFarcasterClient)
             return isFarcasterClient
         }
@@ -92,8 +92,6 @@ export function useFarcasterMiniApp() {
                 try {
                     // Load SDK from CDN if not already loaded
                     if (!window.sdk) {
-                        console.log('Loading Farcaster SDK...')
-                        
                         // Try to load the SDK
                         const script = document.createElement('script')
                         script.type = 'module'
@@ -103,7 +101,6 @@ export function useFarcasterMiniApp() {
                                 window.sdk = sdk;
                                 window.dispatchEvent(new CustomEvent('farcaster-sdk-loaded', { detail: { success: true } }));
                             } catch (error) {
-                                console.error('Failed to load Farcaster SDK:', error);
                                 window.dispatchEvent(new CustomEvent('farcaster-sdk-loaded', { detail: { success: false, error } }));
                             }
                         `
@@ -130,36 +127,29 @@ export function useFarcasterMiniApp() {
                     }
 
                     if (window.sdk) {
-                        console.log('Farcaster SDK loaded successfully')
                         setSdk(window.sdk)
                         setUser(window.sdk.context.user || null)
 
                         // Signal that the app is ready
                         await window.sdk.actions.ready()
                         setIsReady(true)
-                        console.log('Farcaster Mini App ready')
                     }
                 } catch (error) {
-                    console.error('Failed to initialize Farcaster SDK:', error)
                     
                     // Check if we're in development mode
                     const isDev = process.env.NODE_ENV === 'development'
                     
                     if (isDev) {
-                        console.log('Development mode: Creating mock SDK for testing')
                         // Fallback: create a mock SDK for development
                         const mockSdk: FarcasterSDK = {
                             actions: {
                                 ready: async () => {
-                                    console.log('Mock SDK ready')
                                     setIsReady(true)
                                 },
                                 openUrl: async (url: string) => {
-                                    console.log('Mock openUrl:', url)
                                     window.open(url, '_blank')
                                 },
                                 close: async () => {
-                                    console.log('Mock close')
                                     window.close()
                                 },
                             },
@@ -173,11 +163,9 @@ export function useFarcasterMiniApp() {
                             },
                             quickAuth: {
                                 getToken: async () => {
-                                    console.log('Mock getToken')
                                     return 'mock-token-' + Date.now()
                                 },
                                 fetch: async (url: string, options?: RequestInit) => {
-                                    console.log('Mock fetch:', url)
                                     return fetch(url, options)
                                 },
                             },
@@ -187,13 +175,11 @@ export function useFarcasterMiniApp() {
                         setIsReady(true)
                     } else {
                         // In production, fail gracefully
-                        console.error('Farcaster SDK failed to load in production')
                         setIsReady(true) // Still set ready to avoid infinite loading
                     }
                 }
             } else {
                 // Not in Mini App environment
-                console.log('Not in Farcaster Mini App environment')
                 setIsReady(true)
             }
         }
@@ -209,7 +195,6 @@ export function useFarcasterMiniApp() {
             const token = await sdk.quickAuth.getToken()
             return { token, user }
         } catch (error) {
-            console.error('Authentication failed:', error)
             return null
         }
     }
