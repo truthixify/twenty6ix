@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useMiniApp } from "@neynar/react";
-import { useNeynarUser } from "~/hooks/useNeynarUser";
 import { AppProvider, useApp } from "~/contexts/AppContext";
 import { WelcomeScreen } from "~/components/features/WelcomeScreen";
 import { DashboardContent } from "~/components/pages/DashboardContent";
@@ -11,7 +10,9 @@ import { SocialTasksContent } from "~/components/pages/SocialTasksContent";
 import { NFTCollectionContent } from "~/components/pages/NFTCollectionContent";
 import { InformationContent } from "~/components/pages/InformationContent";
 import { AdminContent } from "~/components/pages/AdminContent";
-import { Navigation } from "~/components/features/Navigation";
+import { Sidebar } from "~/components/features/Sidebar";
+import { MobileNavigation } from "~/components/features/MobileNavigation";
+import { MobileHeader } from "~/components/features/MobileHeader";
 
 export interface Twenty6ixAppProps {
   title?: string;
@@ -27,6 +28,29 @@ function Twenty6ixAppContent({ title }: Twenty6ixAppProps) {
   const { state, signInWithFarcaster } = useApp();
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<string>('dashboard');
+
+  // Check if user is admin
+  const isAdmin = state.user?.fid.toString() === process.env.NEXT_PUBLIC_OWNER_FID;
+
+  // Handle URL-based navigation
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname;
+      const tabMap: Record<string, string> = {
+        '/dashboard': 'dashboard',
+        '/social-tasks': 'tasks',
+        '/nft-collection': 'nfts',
+        '/leaderboard': 'leaderboard',
+        '/admin': 'admin',
+        '/information': 'info',
+      };
+      
+      const tab = tabMap[path];
+      if (tab) {
+        setActiveTab(tab);
+      }
+    }
+  }, []);
 
   // Call ready when SDK is loaded
   useEffect(() => {
@@ -47,53 +71,61 @@ function Twenty6ixAppContent({ title }: Twenty6ixAppProps) {
     }
   };
 
-  // Loading state
-  if (!isSDKLoaded || state.isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <div className="h-8 w-8 mx-auto mb-4 animate-spin rounded-full border-b-2 border-primary"></div>
-          <p>Loading TWENTY6IX...</p>
+  // Loading state - skip for now to go directly to dashboard
+  // if (!isSDKLoaded || state.isLoading) {
+  //   return (
+  //     <div className="flex items-center justify-center h-screen">
+  //       <div className="text-center">
+  //         <div className="h-8 w-8 mx-auto mb-4 animate-spin rounded-full border-b-2 border-primary"></div>
+  //         <p>Loading TWENTY6IX...</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+
+  // Skip authentication for now - go directly to dashboard
+  // if (!state.isAuthenticated) {
+  //   return (
+  //     <WelcomeScreen
+  //       onSignIn={handleSignIn}
+  //       isMiniApp={true}
+  //       isLoading={isLoading}
+  //       error={state.error}
+  //     />
+  //   );
+  // }
+
+  // Show main app directly without authentication
+  return (
+    <div className="min-h-screen" style={{ backgroundColor: '#0A0F1A' }}>
+      {/* Sidebar for Desktop */}
+      <Sidebar 
+        activeTab={activeTab} 
+        onTabChange={setActiveTab}
+        isAdmin={isAdmin}
+      />
+
+      {/* Mobile Header */}
+      <MobileHeader isAdmin={isAdmin} />
+
+      {/* Main Content */}
+      <div className="md:pl-64">
+        <div className="px-4 py-6 md:px-8 pb-20 md:pb-6">
+          {activeTab === 'dashboard' && <DashboardContent />}
+          {activeTab === 'leaderboard' && <LeaderboardContent />}
+          {activeTab === 'tasks' && <SocialTasksContent />}
+          {activeTab === 'nfts' && <NFTCollectionContent />}
+          {activeTab === 'info' && <InformationContent />}
+          {activeTab === 'admin' && <AdminContent />}
         </div>
       </div>
-    );
-  }
 
-  // Not authenticated - show welcome screen
-  if (!state.isAuthenticated) {
-    return (
-      <WelcomeScreen
-        onSignIn={handleSignIn}
-        isMiniApp={true}
-        isLoading={isLoading}
-        error={state.error}
+      {/* Mobile Bottom Navigation */}
+      <MobileNavigation 
+        activeTab={activeTab} 
+        onTabChange={setActiveTab}
+        isAdmin={isAdmin}
       />
-    );
-  }
-
-  // Authenticated - show main app
-  return (
-    <div
-      style={{
-        paddingTop: context?.client.safeAreaInsets?.top ?? 0,
-        paddingBottom: context?.client.safeAreaInsets?.bottom ?? 0,
-        paddingLeft: context?.client.safeAreaInsets?.left ?? 0,
-        paddingRight: context?.client.safeAreaInsets?.right ?? 0,
-      }}
-      className="min-h-screen bg-background"
-    >
-      {/* Navigation */}
-      <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
-
-      {/* Main content */}
-      <div className="container mx-auto px-4 py-6 pb-20">
-        {activeTab === 'dashboard' && <DashboardContent />}
-        {activeTab === 'leaderboard' && <LeaderboardContent />}
-        {activeTab === 'tasks' && <SocialTasksContent />}
-        {activeTab === 'nfts' && <NFTCollectionContent />}
-        {activeTab === 'info' && <InformationContent />}
-        {activeTab === 'admin' && <AdminContent />}
-      </div>
     </div>
   );
 }

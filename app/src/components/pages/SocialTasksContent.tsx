@@ -3,10 +3,9 @@
 import React, { useState, useEffect } from 'react'
 import { useApp } from '~/contexts/AppContext'
 import { TaskCard } from '~/components/features/TaskCard'
-import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/Card'
+import { Twenty6ixCard, Twenty6ixCardContent, Twenty6ixCardHeader, Twenty6ixCardTitle } from '~/components/ui/Twenty6ixCard'
 import { CheckSquare } from 'lucide-react'
 import { Task, UserTask } from '~/types/twenty6ix'
-import { AppLayout } from '~/components/layout/AppLayout'
 
 export function SocialTasksContent() {
     const { state } = useApp()
@@ -63,12 +62,11 @@ export function SocialTasksContent() {
     }
 
     return (
-        <AppLayout currentPage="social-tasks">
-            <div className="space-y-6">
+        <div className="space-y-6">
                 {/* Header */}
                 <div className="mb-6">
-                    <h1 className="text-2xl font-bold">Social Tasks</h1>
-                    <p className="text-muted-foreground">Complete social tasks to earn XP. Tasks are verified manually.</p>
+                    <h1 className="text-2xl font-bold text-white">Social Tasks</h1>
+                    <p className="text-[#B8C1D0]">Complete social tasks to earn XP. Tasks are verified manually.</p>
                 </div>
 
                 {/* Desktop Layout */}
@@ -89,14 +87,14 @@ export function SocialTasksContent() {
                         
                         {tasks.length === 0 && (
                             <div className="lg:col-span-2">
-                                <Card>
-                                    <CardContent className="py-12 text-center">
-                                        <CheckSquare className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                                        <p className="text-muted-foreground">
+                                <Twenty6ixCard>
+                                    <Twenty6ixCardContent className="py-12 text-center">
+                                        <CheckSquare className="h-12 w-12 text-[#6E7688] mx-auto mb-4" />
+                                        <p className="text-[#B8C1D0]">
                                             No active tasks available. Check back later!
                                         </p>
-                                    </CardContent>
-                                </Card>
+                                    </Twenty6ixCardContent>
+                                </Twenty6ixCard>
                             </div>
                         )}
                     </div>
@@ -104,14 +102,14 @@ export function SocialTasksContent() {
 
                 {/* Mobile Layout */}
                 <div className="md:hidden space-y-4">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Social Tasks</CardTitle>
-                            <p className="text-sm text-muted-foreground">
+                    <Twenty6ixCard>
+                        <Twenty6ixCardHeader>
+                            <Twenty6ixCardTitle>Social Tasks</Twenty6ixCardTitle>
+                            <p className="text-sm text-[#B8C1D0]">
                                 Complete social tasks to earn XP. Tasks are verified manually.
                             </p>
-                        </CardHeader>
-                    </Card>
+                        </Twenty6ixCardHeader>
+                    </Twenty6ixCard>
 
                     <div className="space-y-4">
                         {tasks.map((task) => {
@@ -128,17 +126,16 @@ export function SocialTasksContent() {
                         })}
                         
                         {tasks.length === 0 && (
-                            <Card>
-                                <CardContent className="py-8 text-center">
-                                    <p className="text-muted-foreground">
+                            <Twenty6ixCard>
+                                <Twenty6ixCardContent className="py-8 text-center">
+                                    <p className="text-[#B8C1D0]">
                                         No active tasks available. Check back later!
                                     </p>
-                                </CardContent>
-                            </Card>
+                                </Twenty6ixCardContent>
+                            </Twenty6ixCard>
                         )}
                     </div>
                 </div>
             </div>
-        </AppLayout>
     )
 }

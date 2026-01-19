@@ -4,16 +4,17 @@ import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/Card'
 import { Button } from '~/components/ui/Button'
 import { Badge } from '~/components/ui/Badge'
-import { Zap, Gift, Users, Coins, Trophy, Heart } from 'lucide-react'
+import { Zap, Gift, Users, Coins, Trophy } from 'lucide-react'
 
 interface WelcomeScreenProps {
     onSignIn: () => void
     isMiniApp: boolean
     isLoading?: boolean
     error?: string | null
+    context?: any // Farcaster context from useMiniApp
 }
 
-export function WelcomeScreen({ onSignIn, isMiniApp, isLoading = false, error }: WelcomeScreenProps) {
+export function WelcomeScreen({ onSignIn, isMiniApp, isLoading = false, error, context }: WelcomeScreenProps) {
     return (
         <div className='flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-blue-50 to-purple-50'>
             <Card className='w-full max-w-md'>
@@ -26,7 +27,7 @@ export function WelcomeScreen({ onSignIn, isMiniApp, isLoading = false, error }:
                     <CardTitle className='text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent'>
                         Welcome to TWENTY6IX
                     </CardTitle>
-                    <p className='text-muted-foreground mt-2'>
+                    <p className='text-[#B8C1D0] mt-2'>
                         Earn XP, complete tasks, and mint exclusive NFTs on Base
                     </p>
                     {isMiniApp && (
@@ -63,7 +64,7 @@ export function WelcomeScreen({ onSignIn, isMiniApp, isLoading = false, error }:
                     {/* XP Economy Preview */}
                     <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 rounded-lg">
                         <h4 className="font-medium mb-2 text-center">XP Economy</h4>
-                        <div className="space-y-1 text-xs text-muted-foreground">
+                        <div className="space-y-1 text-xs text-[#B8C1D0]">
                             <div className="flex justify-between">
                                 <span>Daily Claims:</span>
                                 <span className="font-medium text-green-600">+10 XP</span>
@@ -99,6 +100,11 @@ export function WelcomeScreen({ onSignIn, isMiniApp, isLoading = false, error }:
                             <p className="text-blue-700 text-xs mt-1">
                                 Ready for native Farcaster authentication.
                             </p>
+                            {context?.user && (
+                                <p className="text-blue-600 text-xs mt-1">
+                                    User: @{context.user.username || `FID ${context.user.fid}`}
+                                </p>
+                            )}
                         </div>
                     )}
 
@@ -131,7 +137,7 @@ export function WelcomeScreen({ onSignIn, isMiniApp, isLoading = false, error }:
 
                     {/* Footer */}
                     <div className="text-center">
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-[#B8C1D0]">
                             Built on Base • Powered by Farcaster
                         </p>
                         {isMiniApp ? (
@@ -139,20 +145,37 @@ export function WelcomeScreen({ onSignIn, isMiniApp, isLoading = false, error }:
                                 Optimized for Farcaster Mini App experience
                             </p>
                         ) : (
-                            <p className="text-xs text-muted-foreground mt-1">
+                            <p className="text-xs text-[#B8C1D0] mt-1">
                                 Best experienced in Warpcast as a Mini App
                             </p>
                         )}
                         
                         {/* Debug Link */}
                         {process.env.NODE_ENV === 'development' && (
-                            <div className="mt-2">
+                            <div className="mt-2 space-y-1">
                                 <a 
                                     href="/debug" 
-                                    className="text-xs text-gray-500 hover:text-gray-700 underline"
+                                    className="text-xs text-gray-500 hover:text-gray-700 underline block"
                                 >
                                     Debug Authentication
                                 </a>
+                                <button
+                                    onClick={() => {
+                                        const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+                                        console.log('Environment Info:', {
+                                            isDemoMode,
+                                            isMiniApp,
+                                            context,
+                                            userAgent: navigator.userAgent,
+                                            location: window.location.href,
+                                            supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
+                                            hasSupabaseKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+                                        })
+                                    }}
+                                    className="text-xs text-gray-500 hover:text-gray-700 underline block"
+                                >
+                                    Log Debug Info
+                                </button>
                             </div>
                         )}
                     </div>

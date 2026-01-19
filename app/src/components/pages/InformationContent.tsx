@@ -2,13 +2,12 @@
 
 import React, { useState } from 'react'
 import { useApp } from '~/contexts/AppContext'
-import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/Card'
-import { Button } from '~/components/ui/Button'
-import { Badge } from '~/components/ui/Badge'
+import { Twenty6ixCard, Twenty6ixCardContent, Twenty6ixCardHeader, Twenty6ixCardTitle } from '~/components/ui/Twenty6ixCard'
+import { Twenty6ixButton } from '~/components/ui/Twenty6ixButton'
+import { Twenty6ixBadge } from '~/components/ui/Twenty6ixBadge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/TabsComponent'
 import { ExternalLink, ChevronDown, ChevronRight } from 'lucide-react'
 import { NFT_TIERS } from '~/lib/web3'
-import { AppLayout } from '~/components/layout/AppLayout'
 
 export function InformationContent() {
     const { miniApp } = useApp()
@@ -16,64 +15,63 @@ export function InformationContent() {
     const [infoTab, setInfoTab] = useState('about')
 
     return (
-        <AppLayout currentPage="information">
-            <div className="space-y-6">
+        <div className="space-y-6">
                 {/* Header */}
                 <div className="mb-6">
-                    <h1 className="text-2xl font-bold">Platform Information</h1>
-                    <p className="text-muted-foreground">Learn about TWENTY6IX, view our roadmap, and get answers to common questions.</p>
+                    <h1 className="text-2xl font-bold text-white">Platform Information</h1>
+                    <p className="text-[#B8C1D0]">Learn about TWENTY6IX, view our roadmap, and get answers to common questions.</p>
                 </div>
 
                 {/* Sub-navigation */}
                 <Tabs value={infoTab} onValueChange={setInfoTab} className="w-full">
-                    <TabsList className="grid w-full grid-cols-3 mb-6">
-                        <TabsTrigger value="about">About</TabsTrigger>
-                        <TabsTrigger value="faq">FAQ</TabsTrigger>
-                        <TabsTrigger value="roadmap">Roadmap</TabsTrigger>
+                    <TabsList className="grid w-full grid-cols-3 mb-6 bg-[#0A0F1A] border border-[#00A3AD]/20">
+                        <TabsTrigger value="about" className="data-[state=active]:bg-[#00A3AD] data-[state=active]:text-white">About</TabsTrigger>
+                        <TabsTrigger value="faq" className="data-[state=active]:bg-[#00A3AD] data-[state=active]:text-white">FAQ</TabsTrigger>
+                        <TabsTrigger value="roadmap" className="data-[state=active]:bg-[#00A3AD] data-[state=active]:text-white">Roadmap</TabsTrigger>
                     </TabsList>
 
                     {/* About Tab */}
                     <TabsContent value="about" className="space-y-6">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>How to Earn XP</CardTitle>
-                                </CardHeader>
-                                <CardContent>
+                            <Twenty6ixCard>
+                                <Twenty6ixCardHeader>
+                                    <Twenty6ixCardTitle>How to Earn XP</Twenty6ixCardTitle>
+                                </Twenty6ixCardHeader>
+                                <Twenty6ixCardContent>
                                     <div className="space-y-2">
-                                        <div className="flex justify-between items-center p-2 bg-muted/50 rounded">
-                                            <span className="text-sm">Daily claims</span>
-                                            <Badge variant="secondary">10 XP</Badge>
+                                        <div className="flex justify-between items-center p-2 bg-[#0A0F1A]/50 rounded border border-[#00A3AD]/10">
+                                            <span className="text-sm text-[#B8C1D0]">Daily claims</span>
+                                            <Twenty6ixBadge variant="secondary">10 XP</Twenty6ixBadge>
                                         </div>
-                                        <div className="flex justify-between items-center p-2 bg-muted/50 rounded">
-                                            <span className="text-sm">Donations</span>
-                                            <Badge variant="secondary">50 XP/$1</Badge>
+                                        <div className="flex justify-between items-center p-2 bg-[#0A0F1A]/50 rounded border border-[#00A3AD]/10">
+                                            <span className="text-sm text-[#B8C1D0]">Donations</span>
+                                            <Twenty6ixBadge variant="secondary">50 XP/$1</Twenty6ixBadge>
                                         </div>
-                                        <div className="flex justify-between items-center p-2 bg-muted/50 rounded">
-                                            <span className="text-sm">Referrals</span>
-                                            <Badge variant="secondary">20 XP each</Badge>
+                                        <div className="flex justify-between items-center p-2 bg-[#0A0F1A]/50 rounded border border-[#00A3AD]/10">
+                                            <span className="text-sm text-[#B8C1D0]">Referrals</span>
+                                            <Twenty6ixBadge variant="secondary">20 XP each</Twenty6ixBadge>
                                         </div>
-                                        <div className="flex justify-between items-center p-2 bg-muted/50 rounded">
-                                            <span className="text-sm">Social tasks</span>
-                                            <Badge variant="secondary">5 XP each</Badge>
+                                        <div className="flex justify-between items-center p-2 bg-[#0A0F1A]/50 rounded border border-[#00A3AD]/10">
+                                            <span className="text-sm text-[#B8C1D0]">Social tasks</span>
+                                            <Twenty6ixBadge variant="secondary">5 XP each</Twenty6ixBadge>
                                         </div>
                                     </div>
-                                </CardContent>
-                            </Card>
+                                </Twenty6ixCardContent>
+                            </Twenty6ixCard>
 
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>NFT Tiers</CardTitle>
-                                </CardHeader>
-                                <CardContent>
+                            <Twenty6ixCard>
+                                <Twenty6ixCardHeader>
+                                    <Twenty6ixCardTitle>NFT Tiers</Twenty6ixCardTitle>
+                                </Twenty6ixCardHeader>
+                                <Twenty6ixCardContent>
                                     <div className="space-y-3">
                                         {Object.values(NFT_TIERS).map((tier) => (
-                                            <div key={tier.type} className="p-3 border rounded-lg">
+                                            <div key={tier.type} className="p-3 border border-[#00A3AD]/20 rounded-lg bg-[#0A0F1A]/30">
                                                 <div className="flex justify-between items-center mb-2">
-                                                    <span className="font-medium">{tier.name}</span>
-                                                    <Badge variant="secondary">${tier.mint_price_usd}</Badge>
+                                                    <span className="font-medium text-white">{tier.name}</span>
+                                                    <Twenty6ixBadge variant="secondary">${tier.mint_price_usd}</Twenty6ixBadge>
                                                 </div>
-                                                <div className="text-xs text-muted-foreground">
+                                                <div className="text-xs text-[#B8C1D0]">
                                                     {tier.xp_requirement > 0 && `${tier.xp_requirement.toLocaleString()} XP required`}
                                                     {tier.spend_requirement > 0 && ` • ${tier.spend_requirement} spend OR 15 referrals`}
                                                     {tier.requires_previous_tier && ` • Previous tier required`}
@@ -81,58 +79,58 @@ export function InformationContent() {
                                             </div>
                                         ))}
                                     </div>
-                                </CardContent>
-                            </Card>
+                                </Twenty6ixCardContent>
+                            </Twenty6ixCard>
 
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>Platform Information</CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-3">
+                            <Twenty6ixCard>
+                                <Twenty6ixCardHeader>
+                                    <Twenty6ixCardTitle>Platform Information</Twenty6ixCardTitle>
+                                </Twenty6ixCardHeader>
+                                <Twenty6ixCardContent className="space-y-3">
                                     <div className="space-y-2 text-sm">
                                         <div className="flex justify-between">
-                                            <span className="text-muted-foreground">Network:</span>
-                                            <span className="font-medium">Base (Ethereum L2)</span>
+                                            <span className="text-[#B8C1D0]">Network:</span>
+                                            <span className="font-medium text-white">Base (Ethereum L2)</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-muted-foreground">Framework:</span>
-                                            <span className="font-medium">Farcaster Mini App</span>
+                                            <span className="text-[#B8C1D0]">Framework:</span>
+                                            <span className="font-medium text-white">Farcaster Mini App</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-muted-foreground">Authentication:</span>
-                                            <span className="font-medium">Sign-In With Farcaster</span>
+                                            <span className="text-[#B8C1D0]">Authentication:</span>
+                                            <span className="font-medium text-white">Sign-In With Farcaster</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-muted-foreground">Database:</span>
-                                            <span className="font-medium">Supabase (Real-time)</span>
+                                            <span className="text-[#B8C1D0]">Database:</span>
+                                            <span className="font-medium text-white">Supabase (Real-time)</span>
                                         </div>
                                     </div>
-                                </CardContent>
-                            </Card>
+                                </Twenty6ixCardContent>
+                            </Twenty6ixCard>
 
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>External Links</CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-3">
-                                    <Button
-                                        variant="outline"
+                            <Twenty6ixCard>
+                                <Twenty6ixCardHeader>
+                                    <Twenty6ixCardTitle>External Links</Twenty6ixCardTitle>
+                                </Twenty6ixCardHeader>
+                                <Twenty6ixCardContent className="space-y-3">
+                                    <Twenty6ixButton
+                                        variant="secondary"
                                         className="w-full justify-start"
                                         onClick={() => miniApp.openUrl('https://warpcast.com/twenty6ix')}
                                     >
-                                        <ExternalLink className="mr-2 h-4 w-4" />
+                                        <ExternalLink className="h-4 w-4" />
                                         Follow @twenty6ix on Farcaster
-                                    </Button>
-                                    <Button
-                                        variant="outline"
+                                    </Twenty6ixButton>
+                                    <Twenty6ixButton
+                                        variant="secondary"
                                         className="w-full justify-start"
                                         onClick={() => miniApp.openUrl('https://base.org')}
                                     >
-                                        <ExternalLink className="mr-2 h-4 w-4" />
+                                        <ExternalLink className="h-4 w-4" />
                                         Learn about Base Network
-                                    </Button>
-                                </CardContent>
-                            </Card>
+                                    </Twenty6ixButton>
+                                </Twenty6ixCardContent>
+                            </Twenty6ixCard>
                         </div>
                     </TabsContent>
 
@@ -176,28 +174,28 @@ export function InformationContent() {
                                     answer: 'Reply to our casts, join our community channel across Telegram and X. We are building this together!'
                                 }
                             ].map((faq) => (
-                                <Card key={faq.id} className="overflow-hidden">
-                                    <CardHeader 
-                                        className="cursor-pointer hover:bg-muted/50 transition-colors"
+                                <Twenty6ixCard key={faq.id} className="overflow-hidden">
+                                    <Twenty6ixCardHeader 
+                                        className="cursor-pointer hover:bg-[#00A3AD]/10 transition-colors"
                                         onClick={() => setExpandedFAQ(expandedFAQ === faq.id ? null : faq.id)}
                                     >
                                         <div className="flex items-center justify-between">
-                                            <CardTitle className="text-lg">{faq.question}</CardTitle>
+                                            <Twenty6ixCardTitle className="text-lg">{faq.question}</Twenty6ixCardTitle>
                                             {expandedFAQ === faq.id ? (
-                                                <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                                                <ChevronDown className="h-5 w-5 text-[#B8C1D0]" />
                                             ) : (
-                                                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                                                <ChevronRight className="h-5 w-5 text-[#B8C1D0]" />
                                             )}
                                         </div>
-                                    </CardHeader>
+                                    </Twenty6ixCardHeader>
                                     {expandedFAQ === faq.id && (
-                                        <CardContent className="pt-0">
-                                            <p className="text-muted-foreground">
+                                        <Twenty6ixCardContent className="pt-0">
+                                            <p className="text-[#B8C1D0]">
                                                 {faq.answer}
                                             </p>
-                                        </CardContent>
+                                        </Twenty6ixCardContent>
                                     )}
-                                </Card>
+                                </Twenty6ixCard>
                             ))}
                         </div>
                     </TabsContent>
@@ -206,111 +204,110 @@ export function InformationContent() {
                     <TabsContent value="roadmap" className="space-y-6">
                         <div className="space-y-6">
                             {/* Phase 1 */}
-                            <Card className="border-l-4 border-l-green-500">
-                                <CardHeader>
+                            <Twenty6ixCard className="border-l-4 border-l-[#00A3AD]">
+                                <Twenty6ixCardHeader>
                                     <div className="flex items-center gap-3">
-                                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                                        <div className="w-3 h-3 bg-[#00A3AD] rounded-full shadow-[0_0_10px_rgba(0,163,173,0.5)]"></div>
                                         <div>
-                                            <CardTitle className="text-lg">Phase 1 – Launch & Growth</CardTitle>
-                                            <p className="text-sm text-muted-foreground">Q1-Q2 2026</p>
+                                            <Twenty6ixCardTitle className="text-lg">Phase 1 – Launch & Growth</Twenty6ixCardTitle>
+                                            <p className="text-sm text-[#B8C1D0]">Q1-Q2 2026</p>
                                         </div>
-                                        <Badge variant="success">Current Phase</Badge>
+                                        <Twenty6ixBadge variant="primary">Current Phase</Twenty6ixBadge>
                                     </div>
-                                </CardHeader>
-                                <CardContent>
+                                </Twenty6ixCardHeader>
+                                <Twenty6ixCardContent>
                                     <div className="space-y-3">
-                                        <h4 className="font-medium">Early Birds NFT Claim</h4>
-                                        <ul className="space-y-2 text-sm text-muted-foreground">
+                                        <h4 className="font-medium text-white">Early Birds NFT Claim</h4>
+                                        <ul className="space-y-2 text-sm text-[#B8C1D0]">
                                             <li className="flex items-center gap-2">
-                                                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                                <div className="w-2 h-2 bg-[#00A3AD] rounded-full"></div>
                                                 Wallet connect via Sign-In with Farcaster
                                             </li>
                                             <li className="flex items-center gap-2">
-                                                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                                <div className="w-2 h-2 bg-[#00A3AD] rounded-full"></div>
                                                 Unlimited daily claims system
                                             </li>
                                             <li className="flex items-center gap-2">
-                                                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                                <div className="w-2 h-2 bg-[#00A3AD] rounded-full"></div>
                                                 Social tasks integration
                                             </li>
                                             <li className="flex items-center gap-2">
-                                                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                                <div className="w-2 h-2 bg-[#00A3AD] rounded-full"></div>
                                                 Real-time leaderboard
                                             </li>
                                         </ul>
                                     </div>
-                                </CardContent>
-                            </Card>
+                                </Twenty6ixCardContent>
+                            </Twenty6ixCard>
 
                             {/* Phase 2 */}
-                            <Card className="border-l-4 border-l-blue-500">
-                                <CardHeader>
+                            <Twenty6ixCard className="border-l-4 border-l-[#A100FF]">
+                                <Twenty6ixCardHeader>
                                     <div className="flex items-center gap-3">
-                                        <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                                        <div className="w-3 h-3 bg-[#A100FF] rounded-full shadow-[0_0_10px_rgba(161,0,255,0.5)]"></div>
                                         <div>
-                                            <CardTitle className="text-lg">Phase 2 – Features & Boosts</CardTitle>
-                                            <p className="text-sm text-muted-foreground">Q2-Q3 2026</p>
+                                            <Twenty6ixCardTitle className="text-lg">Phase 2 – Features & Boosts</Twenty6ixCardTitle>
+                                            <p className="text-sm text-[#B8C1D0]">Q2-Q3 2026</p>
                                         </div>
-                                        <Badge variant="secondary">Coming Soon</Badge>
+                                        <Twenty6ixBadge variant="secondary">Coming Soon</Twenty6ixBadge>
                                     </div>
-                                </CardHeader>
-                                <CardContent>
+                                </Twenty6ixCardHeader>
+                                <Twenty6ixCardContent>
                                     <div className="space-y-3">
-                                        <h4 className="font-medium">Unlock Exclusive NFT Minting</h4>
-                                        <ul className="space-y-2 text-sm text-muted-foreground">
+                                        <h4 className="font-medium text-white">Unlock Exclusive NFT Minting</h4>
+                                        <ul className="space-y-2 text-sm text-[#B8C1D0]">
                                             <li className="flex items-center gap-2">
-                                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                                <div className="w-2 h-2 bg-[#A100FF] rounded-full"></div>
                                                 Silver NFT tier unlocked
                                             </li>
                                             <li className="flex items-center gap-2">
-                                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                                <div className="w-2 h-2 bg-[#A100FF] rounded-full"></div>
                                                 Gold NFT tier unlocked
                                             </li>
                                             <li className="flex items-center gap-2">
-                                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                                <div className="w-2 h-2 bg-[#A100FF] rounded-full"></div>
                                                 Enhanced referral system
                                             </li>
                                         </ul>
                                     </div>
-                                </CardContent>
-                            </Card>
+                                </Twenty6ixCardContent>
+                            </Twenty6ixCard>
 
                             {/* Phase 3 */}
-                            <Card className="border-l-4 border-l-purple-500">
-                                <CardHeader>
+                            <Twenty6ixCard className="border-l-4 border-l-gradient-to-b from-[#00A3AD] to-[#A100FF]">
+                                <Twenty6ixCardHeader>
                                     <div className="flex items-center gap-3">
-                                        <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                                        <div className="w-3 h-3 bg-gradient-to-r from-[#00A3AD] to-[#A100FF] rounded-full shadow-[0_0_10px_rgba(0,163,173,0.3),0_0_10px_rgba(161,0,255,0.3)]"></div>
                                         <div>
-                                            <CardTitle className="text-lg">Phase 3 – Token Generation Event</CardTitle>
-                                            <p className="text-sm text-muted-foreground">Q3 2026</p>
+                                            <Twenty6ixCardTitle className="text-lg">Phase 3 – Token Generation Event</Twenty6ixCardTitle>
+                                            <p className="text-sm text-[#B8C1D0]">Q3 2026</p>
                                         </div>
-                                        <Badge variant="secondary">Future</Badge>
+                                        <Twenty6ixBadge variant="secondary">Future</Twenty6ixBadge>
                                     </div>
-                                </CardHeader>
-                                <CardContent>
+                                </Twenty6ixCardHeader>
+                                <Twenty6ixCardContent>
                                     <div className="space-y-3">
-                                        <h4 className="font-medium">Fair Token Launch on Base</h4>
-                                        <ul className="space-y-2 text-sm text-muted-foreground">
+                                        <h4 className="font-medium text-white">Fair Token Launch on Base</h4>
+                                        <ul className="space-y-2 text-sm text-[#B8C1D0]">
                                             <li className="flex items-center gap-2">
-                                                <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                                                <div className="w-2 h-2 bg-gradient-to-r from-[#00A3AD] to-[#A100FF] rounded-full"></div>
                                                 Platinum NFT tier
                                             </li>
                                             <li className="flex items-center gap-2">
-                                                <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                                                <div className="w-2 h-2 bg-gradient-to-r from-[#00A3AD] to-[#A100FF] rounded-full"></div>
                                                 Token rewards & utility system
                                             </li>
                                             <li className="flex items-center gap-2">
-                                                <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                                                <div className="w-2 h-2 bg-gradient-to-r from-[#00A3AD] to-[#A100FF] rounded-full"></div>
                                                 Governance token launch
                                             </li>
                                         </ul>
                                     </div>
-                                </CardContent>
-                            </Card>
+                                </Twenty6ixCardContent>
+                            </Twenty6ixCard>
                         </div>
                     </TabsContent>
                 </Tabs>
             </div>
-        </AppLayout>
     )
 }

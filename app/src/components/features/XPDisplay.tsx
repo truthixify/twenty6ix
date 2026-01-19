@@ -1,8 +1,8 @@
 'use client'
 
 import React from 'react'
-import { Progress } from '~/components/ui/Progress'
-import { Card, CardContent } from '~/components/ui/Card'
+import { Twenty6ixProgress } from '~/components/ui/Twenty6ixProgress'
+import { Twenty6ixCard, Twenty6ixCardContent } from '~/components/ui/Twenty6ixCard'
 import { formatXP, calculateXPProgress } from '~/lib/utils'
 import { Zap } from 'lucide-react'
 
@@ -24,23 +24,41 @@ export function XPDisplay({
         : 100
 
     return (
-        <Card className={className}>
-            <CardContent className='p-4'>
-                <div className='flex items-center gap-3'>
-                    <div className='bg-primary/10 flex h-10 w-10 items-center justify-center rounded-full'>
-                        <Zap className='text-primary h-5 w-5' />
+        <Twenty6ixCard variant="featured" className={className}>
+            <Twenty6ixCardContent className='p-6'>
+                <div className='flex items-center gap-4'>
+                    <div 
+                        className='flex h-12 w-12 items-center justify-center rounded-full'
+                        style={{
+                            backgroundColor: 'rgba(0, 163, 173, 0.2)',
+                            border: '1px solid #00A3AD'
+                        }}
+                    >
+                        <Zap 
+                            className='h-6 w-6'
+                            style={{ color: '#00A3AD' }}
+                        />
                     </div>
 
                     <div className='flex-1'>
                         <div className='flex items-baseline gap-2'>
-                            <span className='text-2xl font-bold'>
+                            <span 
+                                className='text-3xl font-bold'
+                                style={{ color: '#00A3AD' }}
+                            >
                                 {formatXP(currentXP)}
                             </span>
-                            <span className='text-muted-foreground text-sm'>
+                            <span 
+                                className='text-lg font-medium'
+                                style={{ color: '#B8C1D0' }}
+                            >
                                 XP
                             </span>
                             {nextTierXP && currentXP < nextTierXP && (
-                                <span className='text-muted-foreground text-xs'>
+                                <span 
+                                    className='text-sm'
+                                    style={{ color: '#6E7688' }}
+                                >
                                     / {formatXP(nextTierXP)}
                                 </span>
                             )}
@@ -49,26 +67,32 @@ export function XPDisplay({
                         {showProgress &&
                             nextTierXP &&
                             currentXP < nextTierXP && (
-                                <div className='mt-2'>
-                                    <Progress
+                                <div className='mt-3'>
+                                    <Twenty6ixProgress
                                         value={progress}
-                                        className='bg-secondary h-2'
+                                        variant="gradient"
+                                        className='h-3'
                                     />
-                                    <p className='text-muted-foreground mt-1 text-xs'>
-                                        {formatXP(nextTierXP - currentXP)} XP to
-                                        next tier
+                                    <p 
+                                        className='mt-2 text-sm'
+                                        style={{ color: '#B8C1D0' }}
+                                    >
+                                        {formatXP(nextTierXP - currentXP)} XP to next tier
                                     </p>
                                 </div>
                             )}
 
                         {currentXP >= (nextTierXP || 0) && nextTierXP && (
-                            <p className='mt-1 text-xs text-green-600'>
+                            <p 
+                                className='mt-2 text-sm font-medium'
+                                style={{ color: '#22C55E' }}
+                            >
                                 ✓ Tier requirement met!
                             </p>
                         )}
                     </div>
                 </div>
-            </CardContent>
-        </Card>
+            </Twenty6ixCardContent>
+        </Twenty6ixCard>
     )
 }

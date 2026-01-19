@@ -9,9 +9,10 @@ import { cn } from '~/lib/utils'
 interface NavigationProps {
     activeTab: string
     isAdmin?: boolean
+    onTabChange?: (tabId: string) => void
 }
 
-export function Navigation({ activeTab, isAdmin = false }: NavigationProps) {
+export function Navigation({ activeTab, isAdmin = false, onTabChange }: NavigationProps) {
     const router = useRouter()
 
     const tabs = [
@@ -28,9 +29,15 @@ export function Navigation({ activeTab, isAdmin = false }: NavigationProps) {
     ]
 
     const handleTabChange = (tabId: string) => {
-        const tab = tabs.find(t => t.id === tabId)
-        if (tab) {
-            router.push(tab.path)
+        if (onTabChange) {
+            // Use callback for single-page app mode (preferred)
+            onTabChange(tabId)
+        } else {
+            // Use router for multi-page app mode (fallback)
+            const tab = tabs.find(t => t.id === tabId)
+            if (tab) {
+                router.push(tab.path)
+            }
         }
     }
 

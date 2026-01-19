@@ -4,7 +4,6 @@ import React, { useState } from 'react'
 import { useApp } from '~/contexts/AppContext'
 import { NFTCard } from '~/components/features/NFTCard'
 import { NFT_TIERS } from '~/lib/web3'
-import { AppLayout } from '~/components/layout/AppLayout'
 
 export function NFTCollectionContent() {
     const { state } = useApp()
@@ -29,12 +28,11 @@ export function NFTCollectionContent() {
     }
 
     return (
-        <AppLayout currentPage="nft-collection">
-            <div className="space-y-6">
+        <div className="space-y-6">
                 {/* Header */}
                 <div className="mb-6">
-                    <h1 className="text-2xl font-bold">NFT Collection</h1>
-                    <p className="text-muted-foreground">Mint exclusive NFTs as you progress through the tiers.</p>
+                    <h1 className="text-2xl font-bold text-white">NFT Collection</h1>
+                    <p className="text-[#B8C1D0]">Mint exclusive NFTs as you progress through the tiers.</p>
                 </div>
 
                 {/* Desktop Layout */}
@@ -69,6 +67,5 @@ export function NFTCollectionContent() {
                     </div>
                 </div>
             </div>
-        </AppLayout>
     )
 }

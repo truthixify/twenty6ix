@@ -92,6 +92,23 @@ export function AppProvider({ children }: AppProviderProps) {
     const [leaderboard, setLeaderboard] = React.useState<LeaderboardEntry[]>([])
     const miniApp = useFarcasterMiniApp()
 
+    // Initialize with mock user immediately for bypassed authentication
+    useEffect(() => {
+        if (!state.user) {
+            const mockUser: Profile = {
+                fid: 123456,
+                wallet_address: '0x1234567890123456789012345678901234567890',
+                xp_total: 1250,
+                total_spend_usd: 15.50,
+                referral_code: 'DEMO123456',
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+            }
+            dispatch({ type: 'SET_USER', payload: mockUser })
+            dispatch({ type: 'SET_LOADING', payload: false })
+        }
+    }, [state.user])
+
     // Sign in with Farcaster
     const signInWithFarcaster = async () => {
         try {
@@ -256,25 +273,41 @@ export function AppProvider({ children }: AppProviderProps) {
         }
     }
 
-    // Auto-authenticate if in Mini App and user is available
-    useEffect(() => {
-        const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+    // Auto-authenticate if in Mini App and user is available (DISABLED - bypassing auth)
+    // useEffect(() => {
+    //     const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
         
-        if (isDemoMode) {
-            // In demo mode, skip Mini App checks and set ready immediately
-            dispatch({ type: 'SET_LOADING', payload: false })
-        } else if (miniApp.isMiniApp && miniApp.user && !state.isAuthenticated) {
-            signInWithFarcaster()
-        } else if (!miniApp.isMiniApp && miniApp.isReady) {
-            // For web, set loading to false when ready
-            dispatch({ type: 'SET_LOADING', payload: false })
-        }
-    }, [
-        miniApp.isMiniApp,
-        miniApp.user,
-        miniApp.isReady,
-        state.isAuthenticated,
-    ])
+    //     if (isDemoMode) {
+    //         // In demo mode, skip Mini App checks and set ready immediately
+    //         dispatch({ type: 'SET_LOADING', payload: false })
+    //     } else if (miniApp.isMiniApp && miniApp.user && !state.isAuthenticated) {
+    //         signInWithFarcaster()
+    //     } else if (!miniApp.isMiniApp && miniApp.isReady) {
+    //         // For web, set loading to false when ready
+    //         dispatch({ type: 'SET_LOADING', payload: false })
+    //     }
+    // }, [
+    //     miniApp.isMiniApp,
+    //     miniApp.user,
+    //     miniApp.isReady,
+    //     state.isAuthenticated,
+    // ])
+
+    // Provide a mock user for development/testing when authentication is bypassed (DISABLED - moved to initialization)
+    // useEffect(() => {
+    //     if (!state.user && !state.isLoading) {
+    //         const mockUser: Profile = {
+    //             fid: 123456,
+    //             wallet_address: '0x1234567890123456789012345678901234567890',
+    //             xp_total: 1250,
+    //             total_spend_usd: 15.50,
+    //             referral_code: 'DEMO123456',
+    //             created_at: new Date().toISOString(),
+    //             updated_at: new Date().toISOString(),
+    //         }
+    //         dispatch({ type: 'SET_USER', payload: mockUser })
+    //     }
+    // }, [state.user, state.isLoading])
 
     // Set up real-time subscriptions
     useEffect(() => {

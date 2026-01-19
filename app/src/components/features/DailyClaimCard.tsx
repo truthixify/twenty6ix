@@ -1,10 +1,10 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/Card'
-import { Button } from '~/components/ui/Button'
-import { Badge } from '~/components/ui/Badge'
-import { Progress } from '~/components/ui/Progress'
+import { Twenty6ixCard, Twenty6ixCardContent, Twenty6ixCardHeader, Twenty6ixCardTitle } from '~/components/ui/Twenty6ixCard'
+import { Twenty6ixButton } from '~/components/ui/Twenty6ixButton'
+import { Twenty6ixBadge } from '~/components/ui/Twenty6ixBadge'
+import { Twenty6ixProgress } from '~/components/ui/Twenty6ixProgress'
 import { Gift, Clock, Zap, DollarSign } from 'lucide-react'
 import { FEES, XP_REWARDS } from '~/lib/web3'
 
@@ -74,37 +74,37 @@ export function DailyClaimCard({ lastClaimTime, onClaim, isLoading = false }: Da
     }
 
     return (
-        <Card className="relative overflow-hidden">
-            <CardHeader className="pb-3">
+        <Twenty6ixCard className="relative overflow-hidden">
+            <Twenty6ixCardHeader className="pb-3">
                 <div className="flex items-center justify-between">
-                    <CardTitle className="flex items-center gap-2">
-                        <Gift className="h-5 w-5 text-orange-500" />
+                    <Twenty6ixCardTitle className="flex items-center gap-2">
+                        <Gift className="h-5 w-5 text-[#A100FF]" />
                         Daily Claim
-                    </CardTitle>
+                    </Twenty6ixCardTitle>
                     {canClaim ? (
-                        <Badge variant="success" className="gap-1">
+                        <Twenty6ixBadge variant="primary" className="gap-1">
                             <Zap className="h-3 w-3" />
                             Ready!
-                        </Badge>
+                        </Twenty6ixBadge>
                     ) : (
-                        <Badge variant="secondary" className="gap-1">
+                        <Twenty6ixBadge variant="secondary" className="gap-1">
                             <Clock className="h-3 w-3" />
                             Cooldown
-                        </Badge>
+                        </Twenty6ixBadge>
                     )}
                 </div>
-            </CardHeader>
+            </Twenty6ixCardHeader>
 
-            <CardContent className="space-y-4">
+            <Twenty6ixCardContent className="space-y-4">
                 {/* Rewards Info */}
                 <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Zap className="h-4 w-4 text-yellow-500" />
-                        <span>Reward: <span className="font-medium text-green-600">+{XP_REWARDS.DAILY_CLAIM} XP</span></span>
+                    <div className="flex items-center gap-2 text-sm text-[#B8C1D0]">
+                        <Zap className="h-4 w-4 text-[#A100FF]" />
+                        <span>Reward: <span className="font-medium text-[#00A3AD]">+{XP_REWARDS.DAILY_CLAIM} XP</span></span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <DollarSign className="h-4 w-4 text-green-500" />
-                        <span>Cost: <span className="font-medium text-foreground">${FEES.DAILY_CLAIM}</span></span>
+                    <div className="flex items-center gap-2 text-sm text-[#B8C1D0]">
+                        <DollarSign className="h-4 w-4 text-[#00A3AD]" />
+                        <span>Cost: <span className="font-medium text-white">${FEES.DAILY_CLAIM}</span></span>
                     </div>
                 </div>
 
@@ -112,44 +112,45 @@ export function DailyClaimCard({ lastClaimTime, onClaim, isLoading = false }: Da
                 {!canClaim && timeUntilNextClaim > 0 && (
                     <div className="space-y-2">
                         <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Next claim in:</span>
-                            <span className="font-mono font-medium">
+                            <span className="text-[#B8C1D0]">Next claim in:</span>
+                            <span className="font-mono font-medium text-white">
                                 {formatTimeRemaining(timeUntilNextClaim)}
                             </span>
                         </div>
-                        <Progress value={getProgressPercentage()} className="h-2" />
+                        <Twenty6ixProgress value={getProgressPercentage()} className="h-2" />
                     </div>
                 )}
 
                 {/* Action Button */}
-                <Button 
+                <Twenty6ixButton 
                     className="w-full" 
+                    variant={canClaim ? "claim" : "secondary"}
                     onClick={onClaim}
                     disabled={!canClaim || isLoading}
                 >
                     {isLoading ? (
                         <>
-                            <div className="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
+                            <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
                             Processing...
                         </>
                     ) : canClaim ? (
                         <>
-                            <Gift className="mr-2 h-4 w-4" />
+                            <Gift className="h-4 w-4" />
                             Claim {XP_REWARDS.DAILY_CLAIM} XP
                         </>
                     ) : (
                         <>
-                            <Clock className="mr-2 h-4 w-4" />
+                            <Clock className="h-4 w-4" />
                             {formatTimeRemaining(timeUntilNextClaim)} remaining
                         </>
                     )}
-                </Button>
+                </Twenty6ixButton>
 
                 {/* Description */}
-                <p className="text-xs text-muted-foreground text-center">
+                <p className="text-xs text-[#B8C1D0] text-center">
                     Claim your daily XP reward every 24 hours. Small fee helps maintain the platform.
                 </p>
-            </CardContent>
-        </Card>
+            </Twenty6ixCardContent>
+        </Twenty6ixCard>
     )
 }
