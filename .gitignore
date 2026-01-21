@@ -1,0 +1,251 @@
+# TWENTY6IX Project - Root .gitignore
+
+# =============================================================================
+# ENVIRONMENT & SECRETS
+# =============================================================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*
+!.env.example
+
+# Private keys and sensitive data
+*.pem
+*.key
+private-keys.txt
+secrets.json
+
+# Deployment artifacts with sensitive info
+factory-deployment.env
+deployments.env
+
+# =============================================================================
+# OPERATING SYSTEM
+# =============================================================================
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# =============================================================================
+# EDITORS & IDEs
+# =============================================================================
+# VSCode
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# JetBrains IDEs
+.idea/
+*.swp
+*.swo
+*~
+
+# Vim
+*.swp
+*.swo
+*.tmp
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# =============================================================================
+# NODE.JS & FRONTEND (twenty6ix/)
+# =============================================================================
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Package manager locks (keep package-lock.json, ignore others)
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
+.next/
+out/
+build/
+dist/
+
+# Testing
+coverage/
+.nyc_output
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+
+# =============================================================================
+# FOUNDRY & SMART CONTRACTS (contracts/)
+# =============================================================================
+# Foundry artifacts
+cache/
+out/
+artifacts/
+
+# Broadcast logs (keep structure, ignore sensitive runs)
+broadcast/*/31337/
+broadcast/**/dry-run/
+broadcast/**/*-latest.json
+
+# Foundry docs
+docs/
+
+# =============================================================================
+# DATABASES & STORAGE
+# =============================================================================
+# SQLite
+*.sqlite
+*.sqlite3
+*.db
+
+# Database dumps
+*.sql.gz
+*.dump
+
+# =============================================================================
+# LOGS & TEMPORARY FILES
+# =============================================================================
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+.temp/
+
+# =============================================================================
+# SECURITY & ANALYSIS
+# =============================================================================
+# Security analysis reports
+slither-report.json
+mythril-report.json
+security-analysis/
+
+# Coverage reports
+coverage.json
+lcov.info
+
+# =============================================================================
+# DEPLOYMENT & INFRASTRUCTURE
+# =============================================================================
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Docker
+.dockerignore
+Dockerfile.local
+
+# Kubernetes
+k8s-local/
+
+# =============================================================================
+# BACKUP & ARCHIVE FILES
+# =============================================================================
+*.bak
+*.backup
+*.old
+*.orig
+*.rej
+*.tar
+*.tar.gz
+*.zip
+*.rar
+
+# =============================================================================
+# PROJECT-SPECIFIC
+# =============================================================================
+# Local development overrides
+local-config.json
+dev-overrides/
+
+# Generated documentation
+api-docs/
+contract-docs/
+
+# Local testing artifacts
+test-results/
+benchmark-results/
+
+# Wallet artifacts (never commit these!)
+keystore/
+wallets/
+mnemonic.txt
+
+# Local blockchain data
+blockchain-data/
+ganache-db/
+
+# Performance monitoring
+.clinic/
+flamegraph.html
+
+# =============================================================================
+# KEEP THESE FILES (explicit inclusion)
+# =============================================================================
+# Keep example files
+!*.example
+!.env.example
+!config.example.*
+
+# Keep important config files
+!foundry.toml
+!next.config.*
+!tsconfig.json
+!package.json
+!Makefile
+
+# Keep documentation
+!README.md
+!SPEC.md
+!docs/README.md
+
+# Keep deployment scripts (but not their outputs)
+!script/
+!scripts/
