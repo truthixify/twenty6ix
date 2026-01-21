@@ -16,14 +16,14 @@ export const baseConfig = createConfig({
     },
 })
 
-// Contract addresses (to be updated after deployment)
+// Contract addresses
 export const CONTRACTS = {
-    EARLY_BIRD_NFT: process.env
-        .NEXT_PUBLIC_EARLY_BIRD_NFT_CONTRACT as `0x${string}`,
-    SILVER_NFT: process.env.NEXT_PUBLIC_SILVER_NFT_CONTRACT as `0x${string}`,
-    GOLD_NFT: process.env.NEXT_PUBLIC_GOLD_NFT_CONTRACT as `0x${string}`,
-    PLATINUM_NFT: process.env
-        .NEXT_PUBLIC_PLATINUM_NFT_CONTRACT as `0x${string}`,
+    FACTORY: '0xBA9ABB3b3Ecf5E24935FD04ED574C5a6468dEA1e' as `0x${string}`,
+    EARLY_BIRD_NFT: '0x2326460Ebf44958476A6166B05Ce0b64D687D8E9' as `0x${string}`,
+    SILVER_NFT: '0x2C13d5fDDc2fE1ace4947e61736D344b9C361920' as `0x${string}`,
+    GOLD_NFT: '0xbDe2e47ddD27fdE99DcE54dfF06f524bE6f49154' as `0x${string}`,
+    PLATINUM_NFT: '0xc1d354DD8584F154a250223CEF46DA196f421BcB' as `0x${string}`,
+    PAYMENTS: '0x1a83921E50D57ed46120BdE51465aaAA6c3e755f' as `0x${string}`,
 } as const
 
 // Owner wallet address
