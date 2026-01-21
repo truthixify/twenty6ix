@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useMiniApp } from "@neynar/react";
+import { sdk } from "@farcaster/miniapp-sdk";
 import { AppProvider, useApp } from "~/contexts/AppContext";
 import { WelcomeScreen } from "~/components/features/WelcomeScreen";
 import { DashboardContent } from "~/components/pages/DashboardContent";
@@ -28,6 +29,7 @@ function Twenty6ixAppContent({ title }: Twenty6ixAppProps) {
   const { state, signInWithFarcaster } = useApp();
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<string>('dashboard');
+  const [isAppReady, setIsAppReady] = useState(false);
 
   // Check if user is admin
   const isAdmin = state.user?.fid.toString() === process.env.NEXT_PUBLIC_OWNER_FID;
@@ -52,12 +54,47 @@ function Twenty6ixAppContent({ title }: Twenty6ixAppProps) {
     }
   }, []);
 
-  // Call ready when SDK is loaded
+  // Call ready when SDK is loaded and app is ready
   useEffect(() => {
-    if (isSDKLoaded && actions) {
-      actions.ready();
+    const callReady = async () => {
+      try {
+        // Wait a bit to ensure the app is fully loaded and rendered
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Call the Farcaster SDK ready function
+        await sdk.actions.ready();
+        console.log('✅ Farcaster SDK ready() called successfully');
+        setIsAppReady(true);
+      } catch (error) {
+        console.error('❌ Error calling sdk.actions.ready():', error);
+        // Fallback to Neynar actions if available
+        if (isSDKLoaded && actions) {
+          try {
+            actions.ready();
+            console.log('✅ Fallback to Neynar actions.ready() successful');
+            setIsAppReady(true);
+          } catch (fallbackError) {
+            console.error('❌ Fallback ready() also failed:', fallbackError);
+            // Set ready anyway to prevent infinite loading
+            setIsAppReady(true);
+          }
+        } else {
+          // Set ready anyway to prevent infinite loading
+          setIsAppReady(true);
+        }
+      }
+    };
+
+    // Only call ready when we have a loaded state and user data
+    if (isSDKLoaded && state.user) {
+      callReady();
+    } else if (isSDKLoaded) {
+      // If no user but SDK is loaded, still call ready after a delay
+      setTimeout(() => {
+        callReady();
+      }, 1000);
     }
-  }, [isSDKLoaded, actions]);
+  }, [isSDKLoaded, actions, state.user]);
 
   // Handle sign in
   const handleSignIn = async () => {
@@ -94,6 +131,19 @@ function Twenty6ixAppContent({ title }: Twenty6ixAppProps) {
   //     />
   //   );
   // }
+
+  // Show loading screen until app is ready
+  if (!isAppReady) {
+    return (
+      <div className="flex items-center justify-center h-screen" style={{ backgroundColor: '#0A0F1A' }}>
+        <div className="text-center">
+          <div className="h-8 w-8 mx-auto mb-4 animate-spin rounded-full border-b-2 border-[#00A3AD]"></div>
+          <p className="text-white">Loading TWENTY6IX...</p>
+          <p className="text-[#B8C1D0] text-sm mt-2">Initializing Farcaster Mini App</p>
+        </div>
+      </div>
+    );
+  }
 
   // Show main app directly without authentication
   return (

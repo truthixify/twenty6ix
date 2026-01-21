@@ -212,7 +212,7 @@ export function InformationContent() {
                                             <Twenty6ixCardTitle className="text-lg">Phase 1 – Launch & Growth</Twenty6ixCardTitle>
                                             <p className="text-sm text-[#B8C1D0]">Q1-Q2 2026</p>
                                         </div>
-                                        <Twenty6ixBadge variant="primary">Current Phase</Twenty6ixBadge>
+                                        <Twenty6ixBadge variant="default">Current Phase</Twenty6ixBadge>
                                     </div>
                                 </Twenty6ixCardHeader>
                                 <Twenty6ixCardContent>

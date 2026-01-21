@@ -60,7 +60,7 @@ export function TaskCard({ task, userTask, onComplete, isLoading = false }: Task
                     </div>
                     <div className="flex flex-col items-end gap-2">
                         <Twenty6ixBadge 
-                            variant={isCompleted ? 'success' : isAttempted ? 'warning' : 'primary'}
+                            variant={isCompleted ? 'success' : isAttempted ? 'warning' : 'default'}
                             className="gap-1 whitespace-nowrap"
                         >
                             <Zap className="h-3 w-3" />

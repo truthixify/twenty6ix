@@ -82,7 +82,7 @@ export function DailyClaimCard({ lastClaimTime, onClaim, isLoading = false }: Da
                         Daily Claim
                     </Twenty6ixCardTitle>
                     {canClaim ? (
-                        <Twenty6ixBadge variant="primary" className="gap-1">
+                        <Twenty6ixBadge variant="default" className="gap-1">
                             <Zap className="h-3 w-3" />
                             Ready!
                         </Twenty6ixBadge>
