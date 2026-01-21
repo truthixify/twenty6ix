@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useMiniApp } from "@neynar/react";
 import { sdk } from "@farcaster/miniapp-sdk";
 import { AppProvider, useApp } from "~/contexts/AppContext";
-import { WelcomeScreen } from "~/components/features/WelcomeScreen";
+import { SignInWithFarcaster } from "~/components/auth/SignInWithFarcaster";
 import { DashboardContent } from "~/components/pages/DashboardContent";
 import { LeaderboardContent } from "~/components/pages/LeaderboardContent";
 import { SocialTasksContent } from "~/components/pages/SocialTasksContent";
@@ -97,15 +97,20 @@ function Twenty6ixAppContent({ title }: Twenty6ixAppProps) {
   }, [isSDKLoaded, actions, state.user]);
 
   // Handle sign in
-  const handleSignIn = async () => {
+  const handleSignIn = async (userData: { fid: number; username?: string; pfpUrl?: string; bio?: string }) => {
     setIsLoading(true);
     try {
-      await signInWithFarcaster();
+      await signInWithFarcaster(userData);
     } catch (error) {
       console.error('Sign in failed:', error);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSignInError = (error: string) => {
+    console.error('Sign in error:', error);
+    // You could show a toast or error message here
   };
 
   // Loading state - skip for now to go directly to dashboard
@@ -145,7 +150,20 @@ function Twenty6ixAppContent({ title }: Twenty6ixAppProps) {
     );
   }
 
-  // Show main app directly without authentication
+  // Show authentication screen if not authenticated
+  if (!state.isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#0A0F1A' }}>
+        <SignInWithFarcaster
+          onSuccess={handleSignIn}
+          onError={handleSignInError}
+          isLoading={isLoading}
+        />
+      </div>
+    );
+  }
+
+  // Show main app after authentication
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#0A0F1A' }}>
       {/* Sidebar for Desktop */}

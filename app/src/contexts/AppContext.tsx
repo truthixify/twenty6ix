@@ -69,7 +69,7 @@ interface AppContextType {
     state: AppState
     dispatch: React.Dispatch<AppAction>
     // Actions
-    signInWithFarcaster: () => Promise<void>
+    signInWithFarcaster: (userData: { fid: number; username?: string; pfpUrl?: string; bio?: string }) => Promise<void>
     signOut: () => Promise<void>
     updateProfile: (updates: Partial<Profile>) => Promise<void>
     refreshUser: () => Promise<void>
@@ -92,59 +92,20 @@ export function AppProvider({ children }: AppProviderProps) {
     const [leaderboard, setLeaderboard] = React.useState<LeaderboardEntry[]>([])
     const miniApp = useFarcasterMiniApp()
 
-    // Initialize with mock user immediately for bypassed authentication
+    // Initialize with proper authentication check
     useEffect(() => {
-        if (!state.user) {
-            const mockUser: Profile = {
-                fid: 123456,
-                wallet_address: '0x1234567890123456789012345678901234567890',
-                xp_total: 1250,
-                total_spend_usd: 15.50,
-                referral_code: 'DEMO123456',
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-            }
-            dispatch({ type: 'SET_USER', payload: mockUser })
-            dispatch({ type: 'SET_LOADING', payload: false })
-        }
-    }, [state.user])
+        // Don't auto-create mock user anymore - wait for proper authentication
+        dispatch({ type: 'SET_LOADING', payload: false })
+    }, [])
 
-    // Sign in with Farcaster
-    const signInWithFarcaster = async () => {
+    // Sign in with Farcaster using Auth Kit
+    const signInWithFarcaster = async (userData: { fid: number; username?: string; pfpUrl?: string; bio?: string }) => {
         try {
             dispatch({ type: 'SET_LOADING', payload: true })
 
-            // Check if demo mode is enabled
-            const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+            const { fid, username } = userData
 
-            let fid: number
-            let walletAddress: string | undefined
-
-            if (isDemoMode) {
-                // Demo mode - create demo user
-                fid = 123456
-                walletAddress = '0x1234567890123456789012345678901234567890'
-            } else if (miniApp.isMiniApp && miniApp.user) {
-                // Use Farcaster Mini App authentication
-                fid = miniApp.user.fid
-                // For Mini Apps, wallet address would come from separate wallet connection
-                walletAddress = undefined
-            } else if (miniApp.isMiniApp) {
-                // Authenticate with Farcaster Mini App
-                const authResult = await miniApp.authenticate()
-                if (!authResult) {
-                    throw new Error('Farcaster Mini App authentication failed')
-                }
-                fid = authResult.user?.fid || 123456 // fallback
-                walletAddress = undefined
-            } else {
-                // Web fallback - for now, use demo data
-                // TODO: Implement traditional SIWF for web
-                fid = 123456 // Demo FID
-                walletAddress = undefined
-            }
-
-            // Check if user exists
+            // Check if user exists in database
             const { data: existingUser, error: fetchError } = await supabase
                 .from(TABLES.PROFILES)
                 .select('*')
@@ -163,13 +124,6 @@ export function AppProvider({ children }: AppProviderProps) {
                     updated_at: new Date().toISOString(),
                 }
 
-                if (
-                    walletAddress &&
-                    walletAddress !== existingUser.wallet_address
-                ) {
-                    updates.wallet_address = walletAddress
-                }
-
                 const { data: updatedUser, error: updateError } = await supabase
                     .from(TABLES.PROFILES)
                     .update(updates)
@@ -183,9 +137,9 @@ export function AppProvider({ children }: AppProviderProps) {
                 // Create new user
                 const newUser: Omit<Profile, 'created_at' | 'updated_at'> = {
                     fid,
-                    wallet_address: walletAddress,
-                    xp_total: isDemoMode ? 1250 : 0, // Demo user starts with XP
-                    total_spend_usd: isDemoMode ? 15.50 : 0, // Demo user has some spend
+                    wallet_address: undefined, // Will be set when user connects wallet
+                    xp_total: 0,
+                    total_spend_usd: 0,
                     referral_code: generateReferralCode(fid),
                 }
 
@@ -200,13 +154,9 @@ export function AppProvider({ children }: AppProviderProps) {
             }
 
             dispatch({ type: 'SET_USER', payload: user })
-
-            // Set up Mini App features
-            if (miniApp.isMiniApp) {
-                // Mini App is ready, no additional setup needed for now
-            }
         } catch (error) {
-            dispatch({ type: 'SET_ERROR', payload: 'Failed to sign in' })
+            console.error('Sign in error:', error)
+            dispatch({ type: 'SET_ERROR', payload: 'Failed to sign in with Farcaster' })
         }
     }
 
