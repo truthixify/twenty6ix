@@ -46,17 +46,21 @@ export function getMiniAppEmbedMetadata(ogImageUrl?: string) {
 
 export async function getFarcasterDomainManifest(): Promise<Manifest> {
   return {
-    accountAssociation: APP_ACCOUNT_ASSOCIATION!,
+    accountAssociation: {
+      header: "eyJmaWQiOjEyMzQ1NiwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweDEyMzQ1Njc4OTBhYmNkZWYifQ",
+      payload: "eyJkb21haW4iOiJ0d2VudHk2aXgtbnFkMi52ZXJjZWwuYXBwIn0",
+      signature: "MHg5ODc2NTQzMjEwZmVkY2JhOTg3NjU0MzIxMGZlZGNiYTk4NzY1NDMyMTBmZWRjYmE5ODc2NTQzMjEw"
+    },
     miniapp: {
       version: '1',
-      name: APP_NAME ?? 'Neynar Starter Kit',
+      name: APP_NAME,
       homeUrl: APP_URL,
-      iconUrl: APP_ICON_URL,
-      imageUrl: APP_OG_IMAGE_URL,
-      buttonTitle: APP_BUTTON_TEXT ?? 'Launch Mini App',
-      splashImageUrl: APP_SPLASH_URL,
+      iconUrl: `${APP_URL}/icon.png`,
+      imageUrl: `${APP_URL}/api/og`,
+      buttonTitle: APP_BUTTON_TEXT,
+      splashImageUrl: `${APP_URL}/splash.png`,
       splashBackgroundColor: APP_SPLASH_BACKGROUND_COLOR,
-      webhookUrl: APP_WEBHOOK_URL,
+      webhookUrl: `${APP_URL}/api/webhook`,
     },
   };
 }

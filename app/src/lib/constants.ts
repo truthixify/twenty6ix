@@ -16,19 +16,19 @@ import { type AccountAssociation } from '@farcaster/miniapp-core/src/manifest';
  * The base URL of the application.
  * Used for generating absolute URLs for assets and API endpoints.
  */
-export const APP_URL: string = process.env.NEXT_PUBLIC_URL!;
+export const APP_URL: string = process.env.NEXT_PUBLIC_APP_URL || 'https://twenty6ix-nqd2.vercel.app';
 
 /**
  * The name of the mini app as displayed to users.
  * Used in titles, headers, and app store listings.
  */
-export const APP_NAME: string = 'twenty6ix';
+export const APP_NAME: string = 'TWENTY6IX';
 
 /**
  * A brief description of the mini app's functionality.
  * Used in app store listings and metadata.
  */
-export const APP_DESCRIPTION: string = 'twenty6ix';
+export const APP_DESCRIPTION: string = 'Earn XP, complete social tasks, and mint exclusive NFTs on Base. Built for fun, engagement, and real onchain ownership.';
 
 /**
  * The primary category for the mini app.
@@ -40,7 +40,7 @@ export const APP_PRIMARY_CATEGORY: string = 'social';
  * Tags associated with the mini app.
  * Used for search and discovery in app stores.
  */
-export const APP_TAGS: string[] = ['neynar', 'starter-kit', 'demo'];
+export const APP_TAGS: string[] = ['gaming', 'social', 'nft', 'base', 'farcaster'];
 
 // --- Asset URLs ---
 /**
@@ -53,7 +53,7 @@ export const APP_ICON_URL: string = `${APP_URL}/icon.png`;
  * URL for the app's Open Graph image.
  * Used for social media sharing and previews.
  */
-export const APP_OG_IMAGE_URL: string = `${APP_URL}/api/opengraph-image`;
+export const APP_OG_IMAGE_URL: string = `${APP_URL}/api/og`;
 
 /**
  * URL for the app's splash screen image.
@@ -65,7 +65,7 @@ export const APP_SPLASH_URL: string = `${APP_URL}/splash.png`;
  * Background color for the splash screen.
  * Used as fallback when splash image is loading.
  */
-export const APP_SPLASH_BACKGROUND_COLOR: string = '#f7f7f7';
+export const APP_SPLASH_BACKGROUND_COLOR: string = '#0A0F1A';
 
 /**
  * Account association for the mini app.
@@ -80,7 +80,7 @@ export const APP_ACCOUNT_ASSOCIATION: AccountAssociation | undefined =
  * Text displayed on the main action button.
  * Used for the primary call-to-action in the mini app.
  */
-export const APP_BUTTON_TEXT: string = 'Launch Mini App';
+export const APP_BUTTON_TEXT: string = '🚀 Launch TWENTY6IX';
 
 // --- Integration Configuration ---
 /**
